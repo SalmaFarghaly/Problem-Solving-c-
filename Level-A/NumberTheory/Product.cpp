@@ -50,26 +50,11 @@ int main()
 	string x;
 	string y;
 	int i = 0;
-	//cin >> x;
-	//cin >> y;
 	string temp;
-	///string str;
-	///cin >> temp;
-	//cin >> str;
-	//multiplier(x, y);
-	//multiplier(temp, str);
 	while (cin>>x)
 	{
 		cin >> y;
 		multiplier(x, y);
-		/*i++;
-		if (i % 2==0)
-		{
-			x = temp;
-			multiplier(x,y);
-		}
-		else
-			y = temp;*/
 	}
 	system("pause");
 	return 0;

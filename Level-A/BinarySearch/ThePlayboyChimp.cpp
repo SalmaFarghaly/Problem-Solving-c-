@@ -47,20 +47,7 @@ int Tallest(int start,int end,ll*Harr,ll Qidx,int n)
 	}
 	return last;
 }
-/*int Tallest(int & last, int start, int end, int*Harr,int Qidx,int n)
-{
-	if (start==end&&Harr[start]<Qidx)
-		return start;
-	if (start >end)
-		return -1;
-	int mid = (start + end)/ 2;
-	if (Qidx == Harr[mid])
-		return mid - 1;
-	else if (Qidx > Harr[mid])
-		return Tallest(mid, mid + 1, end, Harr, Qidx, n);
-	else if (Qidx < Harr[mid])
-		return Tallest(mid, start, mid-1, Harr, Qidx, n);
-}*/
+
 
 int main()
 {

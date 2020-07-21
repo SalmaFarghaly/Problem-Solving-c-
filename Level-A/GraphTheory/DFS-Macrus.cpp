@@ -10,9 +10,6 @@ void DFS_Visit(int**v,char**adj, int isrc, int jsrc, int ides, int jdes)
 	v[isrc][jsrc] = 1;
 	if(adj[isrc][jsrc]!='@')
 	cout << " ";
-	//jsrc+1,isrc
-	//jsrc-1,isrc
-	//jsrc,isrc-1
 	if (adj[isrc][jsrc + 1] == 'I' || adj[isrc][jsrc + 1] == 'E' || adj[isrc][jsrc + 1] == 'H' || adj[isrc][jsrc + 1] == 'O'
 		|| adj[isrc][jsrc + 1] == 'V' || adj[isrc][jsrc + 1] == 'A' || adj[isrc][jsrc + 1] == '#')
 	{

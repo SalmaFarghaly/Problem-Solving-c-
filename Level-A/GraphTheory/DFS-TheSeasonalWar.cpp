@@ -1,133 +1,51 @@
 //https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=288
 
-using namespace std;
 #include<iostream>
+#include<vector>
 #include<fstream>
-#include<list>
-#include<string>
+#include<string.h>
+using namespace std;
 
-struct Node
-{
-	int index;
-	int visited;
-};
-void DFS_visit(int i,int j,int**adj,int**v,int n)
-{
-	//if (i == n || i < 0 || j == n || j < 0)
-		////return;
-	v[i][j] = 1;
-	if (i != 0 && j != 0)
-	{
-		if (adj[i - 1][j - 1] == 1&&v[i-1][j-1]==0)
-			DFS_visit(i - 1, j - 1, adj, v, n);
-	}
-	if (i != 0 )
-	{
-		if (adj[i - 1][j] == 1&&v[i-1][j]==0)
-			DFS_visit(i - 1, j, adj, v, n);
-	}
-	if (i!=0&&j!=n-1)
-	{
-		if (adj[i - 1][j + 1] == 1&&v[i-1][j+1]==0)
-			DFS_visit(i - 1, j + 1, adj, v, n);
-	}
-	if (j != 0)
-	{
-		if (adj[i][j - 1] == 1&&v[i][j-1]==0)
-			DFS_visit(i, j - 1, adj, v, n);
-	}
-	if (j!=0&&i!=n-1)
-	{
-		if (adj[i + 1][j - 1] == 1&&v[i+1][j-1]==0)
-			DFS_visit(i + 1, j - 1, adj, v, n);
-	}
-	if (j != n - 1)
-	{
-		if (adj[i][j + 1] == 1&&v[i][j+1]==0)
-			DFS_visit(i, j + 1, adj, v, n);
-	}
-	if (i != n - 1)
-	{
-		if (adj[i + 1][j] == 1&&v[i+1][j]==0)
-			DFS_visit(i + 1, j, adj, v, n);
-	}
-	if (i != n - 1 && j != n - 1)
-	{
-		if (adj[i + 1][j + 1] == 1&&v[i+1][j+1]==0)
-			DFS_visit(i + 1, j + 1, adj, v, n);
-	}
+char grid[30][30];
+bool visited[30][30];
 
+int n;
+int dx[] = {1,-1,0,0,1,-1,1,-1};
+int dy[] = {0,0,-1,1,-1,-1,1,1};
+
+void DFS(int i,int j) {
+	
+	visited[i][j] = true;
+	for (int k = 0; k < 8; k++) {
+		if (0 <= i + dx[k] && i + dx[k] < n && 0 <= j + dy[k] && j + dy[k] < n) {
+			if(!visited[i+dx[k]][j+dy[k]] && grid[i + dx[k]][j + dy[k]] == '1')
+			DFS(i + dx[k], j + dy[k]);
+		}
+	}
 }
-int DFS(int**v,int**adj,int n)
-{
+
+int connectedComp() {
 	int cnt = 0;
-	///Node*arr = new Node[n];
-	/*for (int i = 0;i < n;i++)
-	{
-		arr[i].index = i;
-		arr[i].visited = 0;
-	}*/
-	for (int i = 0;i < n;i++)
-	{
-		for (int j = 0;j < n;j++)
-		{
-			if (v[i][j] == 0&&adj[i][j]==1)
-			{
-				v[i][j] = 1;
-				DFS_visit(i,j,adj,v,n);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (!visited[i][j] && grid[i][j]=='1') {
+				DFS(i, j);
 				cnt++;
 			}
-
 		}
-		/*if (arr[i].visited == 0)
-		{
-			    arr[i].visited = 1;
-			    DFS_visit(&arr[i],adj,arr);
-		        cnt++;
-	    }*/
 	}
 	return cnt;
 }
 
-int main()
-{
-	int n;
-	int i = 1;
-	while (cin >> n)
-	{
-		////list<int>*adj = new list<int>[n];
-		int u, v;
-		ifstream infile;
-		///Node temp;
-		///temp.visited = 0;
-		int t;
-		string str;
-		int**adj = new int*[n];
-		int**visited = new int*[n];
-		for (int i = 0;i < n;i++)
+int main() {
+	int img = 0;
+	while (cin >> n) {
+		for (int i = 0; i < n; ++i)
 		{
-			adj[i] = new int[n];
-			visited[i] = new int[n];
+			cin >> grid[i];
 		}
-		for (int i = 0;i < n;i++)
-		{
-			cin >> str;
-			for (int j = 0;j < n;j++)
-			{
-				///	temp.index = j;
-				if (str[j] == '1')
-					adj[i][j] = 1;
-				visited[i][j] = 0;
-			}
-			///adj[v].push_back(u);
-		}
-		///Image number 1 contains 3 war eagles.
-			///Image number 2 contains 6 war eagles.
-			cout << "Image number " << i << " contains " << DFS(visited, adj, n) << " war eagles." << endl;
-			i++;
+		printf("Image number %d contains %d war eagles.\n", ++img, connectedComp());
+		memset(visited, 0, sizeof(visited));
 	}
-	system("pause");
-
-
 	return 0;
 }

@@ -1,85 +1,55 @@
 //https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=1393
 
-using namespace std;
 #include<iostream>
-///"IEHOVA"
-void DFS_Visit(int**v,char**adj, int isrc, int jsrc, int ides, int jdes)
-{
-	if (isrc == ides && jsrc == jdes)
-		return;
-	v[isrc][jsrc] = 1;
-	if(adj[isrc][jsrc]!='@')
-	cout << " ";
-	if (adj[isrc][jsrc + 1] == 'I' || adj[isrc][jsrc + 1] == 'E' || adj[isrc][jsrc + 1] == 'H' || adj[isrc][jsrc + 1] == 'O'
-		|| adj[isrc][jsrc + 1] == 'V' || adj[isrc][jsrc + 1] == 'A' || adj[isrc][jsrc + 1] == '#')
-	{
-		if (v[isrc][jsrc + 1] == 0)
-		{
-			cout << "right";
-			DFS_Visit(v, adj, isrc, jsrc + 1, ides, jdes);
-			return;
-		}
-	}
-	if (adj[isrc][jsrc -1] == 'I' || adj[isrc][jsrc - 1] == 'E' || adj[isrc][jsrc - 1] == 'H' || adj[isrc][jsrc - 1] == 'O'
-		|| adj[isrc][jsrc - 1] == 'V' || adj[isrc][jsrc - 1] == 'A' || adj[isrc][jsrc - 1] == '#')
-	{
-		if (v[isrc][jsrc - 1] == 0)
-		{
-			cout << "left";
-			DFS_Visit(v, adj, isrc, jsrc - 1, ides, jdes);
-			return;
-		}
-	}
-	if (adj[isrc-1][jsrc] == 'I' || adj[isrc-1][jsrc] == 'E' || adj[isrc-1][jsrc] == 'H' || adj[isrc-1][jsrc] == 'O'
-		|| adj[isrc-1][jsrc] == 'V' || adj[isrc-1][jsrc] == 'A' || adj[isrc-1][jsrc] == '#')
-	{
-		if (v[isrc - 1][jsrc]==0)
-		{
-			cout << "forth";
-			DFS_Visit(v, adj, isrc - 1, jsrc, ides, jdes);
-			return;
+#include<vector>
+#include<string>
+
+using namespace std;
+
+string str = "IEHOVA";
+int dx[] = {0,0,-1};
+int dy[]= {1,-1,0};
+string directions[] = {"right","left","forth"};
+int row, col;
+
+void getPath(vector<vector<char>> & grid, vector<vector<bool>>& vis,int  r , int  c , int & k) {
+	for (int i = 0; i < 3; i++) {
+		if (c + dy[i] >= 0 && c + dy[i] < col && r + dx[i] >=0 ) {
+			if (grid[r + dx[i]][c + dy[i]] == '#') {
+				cout << directions[i] << endl;
+				return;
+			}
+			else if (grid[r + dx[i]][c + dy[i]] == str[k] && !vis[r + dx[i]][c + dy[i]]) {
+				vis[r + dx[i]][c + dy[i]] = true;
+				cout << directions[i] << " ";
+				getPath(grid, vis, r + dx[i], c + dy[i], ++k);
+				break;
+			}
 		}
 	}
 
 }
 
-
-
-int main()
-{
-	int t;
-	cin >> t;
-	int n, m;
-	while (t--)
-	{
-		cin >> n >> m;
-		char**adj = new char*[n];
-		int**visited = new int*[n];
-		for (int i = 0;i < n;i++)
-		{
-			adj[i] = new char[m];
-			visited[i] = new int[m];
-		}
-		int isrc, jsrc, ides, jdes;
-		for (int i = 0;i < n;i++)
-		{
-			for (int j = 0;j < m;j++)
-			{
-				cin >> adj[i][j];
-				visited[i][j] = 0;
-				if (adj[i][j] == '@')
-				{
-					isrc = i;jsrc = j;
-				}
-				if (adj[i][j] == '#')
-				{
-					ides = i;jdes = j;
+int main() {
+	int n;
+	cin >> n;
+	while (n--) {
+		cin >> row >> col;
+		char src = '@', dest = '#';
+		int rsrc = 0, csrc = 0;
+		int k = 0;
+		vector<vector<char>> grid(row, vector<char>(col, ' '));
+		vector<vector<bool>> vis(row, vector<bool>(col, false));
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				cin >> grid[i][j];
+				if (grid[i][j] == '@') {
+					rsrc = i; csrc = j;
 				}
 			}
 		}
-		DFS_Visit(visited,adj,isrc,jsrc,ides,jdes);
-		cout << endl;
+		getPath(grid, vis, rsrc, csrc, k);
+		vis[rsrc][csrc] = true;
 	}
-	system("pause");
 	return 0;
 }

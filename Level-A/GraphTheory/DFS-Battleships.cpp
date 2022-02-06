@@ -1,99 +1,61 @@
 //https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3104
 
 #include<iostream>
+#include<vector>
+#include<string>
 using namespace std;
 
-void DFS_visit(int i, int j, char**adj, int**v,int n)
-{
-	    v[i][j] = 1;
-		if (j != 0)
-		{
-			if (adj[i][j - 1] != '.'&&v[i][j - 1] == 0)
-			{
-				DFS_visit(i, j - 1, adj, v, n);
-			}
-		}
-		if (j != n - 1)
-		{
-			if (adj[i][j + 1] != '.'&&v[i][j + 1] == 0)
-			{
-				DFS_visit(i, j + 1, adj, v, n);
-			}
-		}
-		if (i != 0)
-		{
-			if (adj[i - 1][j] != '.'&&v[i - 1][j] == 0)
-			{
-				DFS_visit(i - 1, j, adj, v, n);
-			}
-		}
-		if (i != n - 1)
-		{
-			if (adj[i + 1][j] != '.'&&v[i + 1][j] == 0)
-			{
-				DFS_visit(i + 1, j, adj, v, n);
-			}
-		}
+int N;
+int T;
+int dx[] = { 1,-1,0,0 };
+int dy[] = { 0,0,1,-1 };
 
+bool explore(vector<string>& grid, vector<vector<bool>>& vis, int i, int j, bool alive, int dir = -1, int s = 1) {
+	vis[i][j] = true;
+	if (s == N / 2) return alive;
+	if (dir == -1) {
+		for (int k = 0; k < 4; k++) {
+			if (i + dx[k] >= 0 && i + dx[k] < N && j + dy[k] >= 0 && j + dy[k] < N) {
+				if (!vis[i + dx[k]][j + dy[k]] && grid[i + dx[k]][j + dy[k]] != '.') {
+					alive = explore(grid, vis, i + dx[k], j + dy[k],grid[i + dx[k]][j + dy[k]]=='x', k, ++s) || alive;
+					break;
+				}
+			}
+		}
+	}
+	else {
+		if (i + dx[dir] >= 0 && i + dx[dir] < N && j + dy[dir] >= 0 && j + dy[dir] < N) {
+			if (!vis[i + dx[dir]][j + dy[dir]] && grid[i + dx[dir]][j + dy[dir]] != '.') {
+				alive = explore(grid, vis, i + dx[dir], j + dy[dir],grid[i + dx[dir]][j + dy[dir]] == 'x', dir, ++s) || alive;
+			}
+		}
+	}
+	return alive;
 }
 
-
-
-
-int DFS(char**adj, int**v, int n)
-{
+int getAliveShipsCnt(vector<string> & grid, vector<vector<bool>> & vis) {
 	int cnt = 0;
-	char c = 'c';
-	int s = 0;
-	int m;
-	if (n % 2 == 1)
-		m = n / 2 + 1;
-	else
-		m = n / 2;
-	for (int i = 0;i < n;i++)
-	{
-		for (int j = 0;j < n;j++)
-		{
-			if (adj[i][j] == 'x'&&v[i][j] == 0)
-			{
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			if (!vis[i][j] && grid[i][j] !='.' && explore(grid, vis, i, j, grid[i][j] == 'x'))
 				cnt++;
-				DFS_visit(i, j, adj, v, n);
-				s = 0;
-			}
 		}
 	}
 	return cnt;
 }
 
-int main()
-{
-	int t;
-	cin >> t;
-	int n;
-	int k = 0;
-	while (t--)
-	{
-		cin >> n;
-		char**adj = new char*[n];
-		int**visited = new int*[n];
-		for (int i = 0;i < n;i++)
-		{
-			adj[i] = new char[n];
-			visited[i] = new int[n];
+int main() {
+	cin >> T;
+	int i = 0;
+	while (T--) {
+		i++;
+		cin >> N;
+		vector<string> grid(N,"");
+		vector<vector<bool>> vis(N,vector<bool>(N,0));
+		for (auto& ele : grid) {
+			cin >> ele;
 		}
-		for (int i = 0;i < n;i++)
-		{
-			for (int j = 0;j < n;j++)
-			{
-				cin >> adj[i][j];
-				visited[i][j] = 0;
-			}
-		}
-		k++;
-		cout << "Case " << k << ": " << DFS(adj, visited, n) << endl;
+		printf("Case %d: %d\n",i ,getAliveShipsCnt(grid, vis));
+
 	}
-
-
-	system("pause");
-	return 0;
 }

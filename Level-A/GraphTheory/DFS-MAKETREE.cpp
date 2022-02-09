@@ -1,66 +1,56 @@
 //https://www.spoj.com/problems/MAKETREE/
-
-using namespace std;
 #include<iostream>
 #include<vector>
-#include<list>
+#include<algorithm>
 #include<stack>
+#include<list>
+using namespace std;
  
+stack<int> st;
  
- 
-stack<int> s;
- 
-void DFS_Visit(vector<int>&v, list<int>*adj,int src)
-{
-	v[src] = 1;
-	for (auto it = adj[src].begin();it != adj[src].end();++it)
+void setParent(list<int>* adj, vector<bool>& vis,int node) {
+	vis[node] = 1;
+	for (auto it = adj[node].begin(); it != adj[node].end(); ++it)
 	{
 		int index = *it;
-		if (v[index] == 0)
-			DFS_Visit(v,adj,index);
+		if (vis[*it] == 0)
+			setParent(adj, vis, *it);
 	}
-	s.push(src);
- 
+	st.push(node);
 }
  
- 
-int main()
-{
-	int n, k;
-	cin >> n >> k;
-	list<int> *adj = new list<int>[n];
-	///int**vis = new int*[n];
-	int w;
-	int temp;
-	for (int i = 0;i < k;i++)
-	{
-		cin >> w;
-		for (int j = 0;j < w;j++)
-		{
-			cin >> temp;
-			adj[i].push_back(temp - 1);
+void getHierarchy(list<int>* adj, vector<bool> & vis,int N) {
+	for (int i = 0; i < N; i++) {
+		if (!vis[i]) {
+			setParent(adj, vis,i);
 		}
 	}
-	vector<int>vis(n,0);
-	for (int i = 0;i < n;i++)
-	{
-		if (vis[i] == 0)
-			DFS_Visit(vis, adj, i);
+	vector<int> parents(N,0);
+	while (!st.empty()) {
+		int p = st.top();
+		st.pop();
+		if (st.empty()) break;
+		int c = st.top();
+		parents[c] = p+1;
 	}
-	vector<int>parent(n,-1);
-	int l = s.top();
-	s.pop();
-	int t;
-	while (!s.empty())
-	{
-		t = s.top();
-		parent[t] = l;
-		l = t;
-		s.pop();
-	}
- 
-	for (int i = 0;i < n;i++)
-		cout << parent[i]+1 << endl;
- 
-	return 0;
+	for (int i = 0; i < N; i++)
+		cout << parents[i] << endl;
 }
+ 
+int main() {
+	int N, K;
+	cin >> N >> K;
+	list<int>* adj = new list<int>[N];
+	for (int i = 0; i < K; i++)
+	{
+		int j, u;
+		cin >> j;
+		while (j--) {
+			cin >> u;
+			adj[i].push_back(u - 1);
+		}
+	}
+	vector<bool> vis(N,false);
+	getHierarchy(adj,vis,N);
+	return 0;
+} 

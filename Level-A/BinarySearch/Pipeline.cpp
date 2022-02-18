@@ -5,52 +5,42 @@ using namespace std;
 
 typedef long long ll;
 
-
-///int solve(int n)
-ll sum(ll n)
-{
+ll sum(ll n) {
 	return n * (n + 1) / 2;
 }
-ll BS(ll n, ll k)
-{
+
+ll sum(ll s, ll e) {
+	return sum(e) - sum(s - 1);
+}
+
+ll BS(ll k, ll n) {
 	ll st = 1;
 	ll ed = k;
-	ll sTemp = sum(ed);
-	while (st < ed)
-	{
-		ll md = (st+ed) / 2;
-		ll s = (md!=1)?sTemp-sum(md-1):sTemp;///sTemp - sum(md);
-		if (s == n)
+	while (st < ed) {
+		ll md = (st + ed) / 2;
+		ll s = sum(md, k);
+		if (n == s)
 			return k - md + 1;
 		if (s > n)
 			st = md + 1;
 		else
 			ed = md;
-
 	}
 	return k - st + 2;
-
 }
 
-int main()
-{
-	ll n;
-	ll k;
+int main() {
+	ll n, k;
 	cin >> n >> k;
-	//int*arr = new int[k-1];
 	if (n == 1)
-		cout << 0;
-	else if (k>= n)
-		cout << 1;
-	else if (sum(k-1) < n-1)
-		cout <<-1;
-	else
-	{
-		n--;
-		k--;
-		cout<<BS(n,k);
+		cout << "0\n";
+	else if (n <= k)
+		cout << "1\n";
+	else if (n - 1 > sum(k - 1))
+		cout << "-1\n";
+	else {
+		cout<<BS(--k, --n);
 	}
-
 
 	return 0;
 }

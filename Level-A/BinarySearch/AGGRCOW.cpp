@@ -5,66 +5,42 @@
 #include<algorithm>
 using namespace std;
 
-typedef long long ll;
-int nStalls;
-int Cows;
-ll lo;
-ll hi;
+int t, n, c;
 
-int IsValid(vector<ll>&vec,ll dist)
-{
-	int cnt = 1;
-	ll st = vec[0];
-	int i = 1;
-	while (cnt < Cows&&i<nStalls)
-	{
-		if (vec[i]-st >=dist)
-		{
-			cnt++;
-			st = vec[i];
+bool isValid (vector<int>& vec, int mid) {
+	int tempC = c - 1;
+	int st = vec[0] + mid;
+	for (int i = 1; i < n && tempC !=0 ; i++) {
+		if (st <= vec[i]) {
+			st = vec[i] + mid;
+			tempC--;
 		}
-		i++;
 	}
-	if (i == nStalls&&cnt!=Cows)return 0;
-	else return 1;                                  
-
+	return tempC == 0;
 }
 
-int main()
-{
-	int t;
-	cin >> t;
-	ll temp;
-	while (t--)
-	{
-		cin >> nStalls >> Cows;
-		vector<ll>vec;
-		for (int i = 0;i < nStalls;i++)
-		{
-			cin >> temp;
-			vec.push_back(temp);
+int main() {
+	cin >> t; 
+	while (t--) {
+		cin >> n >> c;
+		vector<int> vec(n,0);
+		for (auto& ele : vec) {
+			cin >> ele;
 		}
 		sort(vec.begin(),vec.end());
-		ll md;
-		lo = 0;
-		hi = vec[nStalls-1];
-		ll lastvalid=0;
-		while (lo < hi)
-		{
-			md = (lo + hi) / 2;
-			if (IsValid(vec,md))
-				{
-			    lo = md+1;
-				lastvalid=md;
-				}
+		int ed = vec[n-1] - vec[0];
+		int st = 1;
+		int mxmDis = -1;
+		while (st <= ed) {
+			int mid = (st + ed) / 2;
+			if (isValid(vec, mid)) {
+				mxmDis = max(mxmDis, mid);
+				st = mid + 1;
+			}
 			else
-				hi = md - 1;
+				ed = mid - 1;
 		}
-		if(lastvalid<hi&&IsValid(vec,hi))
-			cout<<hi<<endl;
-		else
-		   cout<<lastvalid<<endl;
-
+		cout << mxmDis << endl;
 	}
 	return 0;
 }

@@ -1,48 +1,31 @@
-using namespace std;
-#include<vector>
 #include<iostream>
-#include <iomanip>
-#include<cmath>
+#include<vector>
 #include<algorithm>
 
+using namespace std;
 
+typedef vector<pair<int, int>> vpair;
+typedef pair<int, int> pi;
+typedef long long ll;
 
-vector<int>mtch;
-vector<int>mtchbox;
-int n,m=0; // n max number of matchboxes, m number of containers
-// get container index that has matchboxes with maximum numbers of matches
-int contIndex(){
-    int max=-1;
-    int index=-1;
-    for(int i=0;i<m;i++){
-        if(mtch[i]>max){
-            index=i;
-            max=mtch[i];
-        }
-    }
-    return index;
-}
-
-int main(){
-    cin>>n>>m;
-    int temp=0;
-    for(int i=0;i<m;i++){
-        cin>>temp;
-        mtchbox.push_back(temp);
-        cin>>temp;
-        mtch.push_back(temp);
-    }
-    int ans=0;
-    int remCont=n;
-    while(remCont>0){
-        int maxIdx=contIndex();
-        if(maxIdx==-1)
-            break;
-        ans+=std::max(mtchbox[maxIdx],remCont)*mtch[maxIdx];
-        remCont-=std::max(mtchbox[maxIdx],remCont);
-        mtch[maxIdx]=-1;
-    }
-    cout<<ans;
-    return 0;
-
+int main() {
+	int n, m, a, b;
+	cin >> n >> m;
+	vpair vec(m,pi(0,0));
+	for (int i = 0; i < m; i++) {
+		cin >> vec[i].first;
+		cin >> vec[i].second;
+	}
+	sort(vec.begin(), vec.end(), [](const pi& p1, const pi& p2) {
+		return p1.second > p2.second;
+	});
+	ll ans = 0;
+	int j = 0;
+	while (n > 0 && j < m) {
+		ans += min(vec[j].first, n)*vec[j].second;
+		n -= min(vec[j].first, n);
+		j++;
+	}
+	cout << ans;
+	return 0;
 }

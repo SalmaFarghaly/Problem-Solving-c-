@@ -1,37 +1,35 @@
-// https://codeforces.com/contest/463/problem/B
-
-using namespace std;
-#include<vector>
 #include<iostream>
-#include<cmath>
+#include<vector>
 #include<algorithm>
+#include <numeric>
+using namespace std;
 
+typedef long long ll;
+#define all(v) ((v).begin()),((v).end())
+#define loop(i,n) for(int i=1;i<=n;i++)
 
 int main() {
-	int n = 0;
+	int n;
 	cin >> n;
-	int diff = 0;
-	int energy = 0;
-	int prev = 0;
-	int next = 0;
-	for (int i = 0;i < n;i++) {
-		cin >> next;
-		if (prev - next >= 0) {
-			energy += prev - next;
-		}
-		else {
-			if (energy >= next-prev) {
-				energy -= next - prev;
-			}
-			else {
-				diff += next - prev-energy;
-				energy = 0;
-			}
-		}
-		prev = next;
+	vector<int> v(n+1,0);
+	loop(i, n) {
+		cin >> v[i];
 	}
-	cout << diff;
-	system("pause");
+	vector<int> vsub;
+	adjacent_difference(all(v),back_inserter(vsub));
+	ll e = 0, ans = 0;
+	loop(j, n) {
+		if (vsub[j] < 0) {
+			e += abs(vsub[j]);
+		}
+		else if (vsub[j] > 0) {
+			e -= vsub[j];
+			if (e < 0) {
+				ans += abs(e);
+				e = 0;
+			}
+		}
+	}
+	cout << ans;
 	return 0;
 }
-

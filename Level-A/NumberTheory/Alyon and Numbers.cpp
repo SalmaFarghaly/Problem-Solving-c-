@@ -46,6 +46,10 @@ int main() {
 	ll x[5], y[5];
 	memset(x, 0, sizeof(x));
 	memset(y, 0, sizeof(y));
+	// based on idea that (x+y)mod 5 = (x mod 5 + y mod 5) mod 5
+	// x mod 5 = 0 & y mod 5 = 0
+	// x mod 5 = 2 & y mod 5 = 3 and visa versa
+	// x mod 5 = 1 & y mod 5 = 4 and visa versa
 	lpi(i, 1, n) {
 		x[i % 5]++;
 	}
